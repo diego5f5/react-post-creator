@@ -8,4 +8,5 @@ export type ItemTransformerPropsTypes = {
   setIsTyping: (value: boolean) => void;
   onChange: (props: ItemsTypes, isTransformingText: boolean) => void;
   onSelect: () => void;
+  stageScale: number;
 };

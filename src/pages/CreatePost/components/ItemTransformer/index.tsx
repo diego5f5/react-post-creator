@@ -17,6 +17,7 @@ const ItemTransformer = ({
   onSelect,
   onChange,
   stageRef,
+  stageScale,
 }: ItemTransformerPropsTypes) => {
   const imageRef = useRef<Konva.Image | null>(null);
   const textRef = useRef<Konva.Text | null>(null);
@@ -130,7 +131,8 @@ const ItemTransformer = ({
               stageRef,
               itemProps,
               onChange,
-              setIsTyping
+              setIsTyping,
+              stageScale
             );
           }}
           onDragEnd={handleDragEnd}

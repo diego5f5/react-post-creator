@@ -1,24 +1,51 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect, RefObject } from 'react';
 import { Stage, Layer } from 'react-konva';
 import Konva from 'konva';
 
-import SideBar from './components/SideBar';
+import HeaderToolbar from './components/HeaderToolbar';
+import SideToolbar from './components/SideToolbar';
 import Background from './components/Background';
 import ItemTransformer from './components/ItemTransformer';
 
+import { STAGE_VIRTUAL_SIZE } from './constants';
+
 import { ItemsTypes, ItemIDTypes } from './models';
 
-import { Container } from './styles';
+import { Container, BodySectionContainer } from './styles';
 
 const CreatePost = () => {
   const [selectedId, setSelectedId] = useState<ItemIDTypes>();
   const [isTyping, setIsTyping] = useState(false);
+  const [stageScale, setStageScale] = useState(0);
   const [items, setItems] = useState<Array<ItemsTypes>>([]);
 
   const [history, setHistory] = useState<Array<Array<ItemsTypes>>>([[]]);
   const [historyStep, setHistoryStep] = useState(0);
 
+  const bodyRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef(null);
+
+  useEffect(() => {
+    handleWindowResize(bodyRef);
+
+    window.addEventListener('resize', () => handleWindowResize(bodyRef));
+
+    return () =>
+      window.removeEventListener('resize', () => handleWindowResize(bodyRef));
+  }, []);
+
+  const handleWindowResize = (bodyRef: RefObject<HTMLDivElement>) => {
+    if (bodyRef.current) {
+      const width = bodyRef.current.offsetWidth;
+      const height = bodyRef.current.offsetHeight;
+
+      const maxSize = width < height ? width : height;
+
+      const scale = maxSize / STAGE_VIRTUAL_SIZE;
+
+      setStageScale(scale);
+    }
+  };
 
   const handleDeselect = (
     e: Konva.KonvaEventObject<MouseEvent | TouchEvent>
@@ -58,25 +85,33 @@ const CreatePost = () => {
 
   return (
     <Container>
-      <div style={{ display: 'flex' }}>
-        <SideBar
+      <SideToolbar
+        items={items}
+        setItems={setItems}
+        isTyping={isTyping}
+        selectedId={selectedId}
+        setSelectedId={setSelectedId}
+        handleHistory={handleHistory}
+      />
+
+      <BodySectionContainer ref={bodyRef}>
+        <HeaderToolbar
+          width={STAGE_VIRTUAL_SIZE * stageScale}
           stageRef={stageRef}
-          items={items}
-          setItems={setItems}
-          isTyping={isTyping}
-          selectedId={selectedId}
-          setSelectedId={setSelectedId}
-          handleHistory={handleHistory}
           history={history}
           historyStep={historyStep}
           setHistoryStep={setHistoryStep}
+          setItems={setItems}
+          selectedId={selectedId}
+          setSelectedId={setSelectedId}
         />
 
         <Stage
-          width={600}
-          height={600}
+          width={STAGE_VIRTUAL_SIZE * stageScale}
+          height={STAGE_VIRTUAL_SIZE * stageScale}
+          scaleX={stageScale}
+          scaleY={stageScale}
           ref={stageRef}
-          style={{ border: 'solid 1px black' }}
           onMouseDown={handleDeselect}
           onTouchStart={handleDeselect}
         >
@@ -86,6 +121,7 @@ const CreatePost = () => {
               <ItemTransformer
                 key={index}
                 itemProps={item}
+                stageScale={stageScale}
                 setIsTyping={setIsTyping}
                 isSelected={item.id === selectedId}
                 onSelect={() => setSelectedId(item.id)}
@@ -97,7 +133,7 @@ const CreatePost = () => {
             ))}
           </Layer>
         </Stage>
-      </div>
+      </BodySectionContainer>
     </Container>
   );
 };
