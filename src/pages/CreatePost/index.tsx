@@ -3,11 +3,10 @@ import { Stage, Layer } from 'react-konva';
 import Konva from 'konva';
 
 import HeaderToolbar from './components/HeaderToolbar';
-import SideToolbar from './components/SideToolbar';
 import Background from './components/Background';
 import ItemTransformer from './components/ItemTransformer';
 
-import { STAGE_VIRTUAL_SIZE } from './constants';
+import { STAGE_VIRTUAL_SIZE, MIN_WIDTH } from './constants';
 
 import { ItemsTypes, ItemIDTypes } from './models';
 
@@ -36,8 +35,11 @@ const CreatePost = () => {
 
   const handleWindowResize = (bodyRef: RefObject<HTMLDivElement>) => {
     if (bodyRef.current) {
-      const width = bodyRef.current.offsetWidth;
-      const height = bodyRef.current.offsetHeight;
+      let width = bodyRef.current.offsetWidth;
+      let height = bodyRef.current.offsetHeight;
+
+      width = width <= MIN_WIDTH ? MIN_WIDTH : width;
+      height = height <= MIN_WIDTH ? MIN_WIDTH : height;
 
       const maxSize = width < height ? width : height;
 
@@ -85,25 +87,19 @@ const CreatePost = () => {
 
   return (
     <Container>
-      <SideToolbar
-        items={items}
-        setItems={setItems}
-        isTyping={isTyping}
-        selectedId={selectedId}
-        setSelectedId={setSelectedId}
-        handleHistory={handleHistory}
-      />
-
       <BodySectionContainer ref={bodyRef}>
         <HeaderToolbar
           width={STAGE_VIRTUAL_SIZE * stageScale}
+          isTyping={isTyping}
           stageRef={stageRef}
           history={history}
           historyStep={historyStep}
           setHistoryStep={setHistoryStep}
+          items={items}
           setItems={setItems}
           selectedId={selectedId}
           setSelectedId={setSelectedId}
+          handleHistory={handleHistory}
         />
 
         <Stage

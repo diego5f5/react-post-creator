@@ -1,9 +1,10 @@
 import styled from 'styled-components';
-import { styled as MaterialStyled, Button, IconButton } from '@mui/material';
+import { styled as MaterialStyled, IconButton } from '@mui/material';
 
-import { HEADER_TOOLBAR_HEIGHT } from '../../constants';
+import { HEADER_TOOLBAR_HEIGHT, TOP_MARGIN } from '../../constants';
 
 export const Container = styled.div<{ width: number }>`
+  margin-top: ${`${TOP_MARGIN}px`};
   height: ${`${HEADER_TOOLBAR_HEIGHT}px`};
   min-height: ${`${HEADER_TOOLBAR_HEIGHT}px`};
   display: flex;
@@ -16,9 +17,5 @@ export const Container = styled.div<{ width: number }>`
 export const UndoRedoContainer = styled.div`
   display: flex;
 `;
-
-export const CustomButton = MaterialStyled(Button)(() => ({
-  width: 'fit-content',
-}));
 
 export const CustomIconButton = MaterialStyled(IconButton)(() => ({}));

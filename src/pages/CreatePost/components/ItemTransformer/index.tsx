@@ -9,6 +9,7 @@ import handleTextInteraction from './handleTextInteraction';
 import { defaultAnchors } from './constants';
 
 import { ItemTransformerPropsTypes } from './models';
+import { ItemTypesEnum } from '../../models';
 
 const ItemTransformer = ({
   itemProps,
@@ -57,7 +58,7 @@ const ItemTransformer = ({
     const scaleY = node.scaleY();
     node.scaleX(1);
 
-    if (node && type === 'image') {
+    if (node && type === ItemTypesEnum.IMAGE) {
       node.scaleY(1);
 
       onChange({
@@ -72,7 +73,7 @@ const ItemTransformer = ({
       return;
     }
 
-    if (node && type === 'text') {
+    if (node && type === ItemTypesEnum.TEXT) {
       onChange({
         ...itemProps,
         x: node.x(),
@@ -95,19 +96,31 @@ const ItemTransformer = ({
 
   const handleCurrentItemNode = (): Konva.Node | null => {
     if (imageRef && imageRef.current) {
-      return { node: imageRef.current, type: 'image' };
+      return { node: imageRef.current, type: ItemTypesEnum.IMAGE };
     }
 
     if (textRef && textRef.current) {
-      return { node: textRef.current, type: 'text' };
+      return { node: textRef.current, type: ItemTypesEnum.TEXT };
     }
 
     return null;
   };
 
+  const handleStartEditing = () => {
+    handleTextInteraction(
+      textRef,
+      transformerRef,
+      stageRef,
+      itemProps,
+      onChange,
+      setIsTyping,
+      stageScale
+    );
+  };
+
   return (
     <>
-      {itemProps.itemType === 'image' ? (
+      {itemProps.itemType === ItemTypesEnum.IMAGE ? (
         <Image
           {...itemProps}
           ref={imageRef}
@@ -117,24 +130,15 @@ const ItemTransformer = ({
           onDragEnd={handleDragEnd}
           onTransformEnd={handleTransformEnd}
         />
-      ) : itemProps.itemType === 'text' ? (
+      ) : itemProps.itemType === ItemTypesEnum.TEXT ? (
         <Text
           {...itemProps}
           ref={textRef}
           draggable
           onClick={onSelect}
           onTap={onSelect}
-          onDblClick={() => {
-            handleTextInteraction(
-              textRef,
-              transformerRef,
-              stageRef,
-              itemProps,
-              onChange,
-              setIsTyping,
-              stageScale
-            );
-          }}
+          onDblClick={handleStartEditing}
+          onDblTap={handleStartEditing}
           onDragEnd={handleDragEnd}
           onTransform={handleTransformText}
           onTransformEnd={handleTransformEnd}
@@ -147,7 +151,10 @@ const ItemTransformer = ({
           rotationSnaps={[0, 90, 180, 270]}
           boundBoxFunc={(oldBox, newBox) => {
             // limit resize
-            if (newBox.width < 20 || newBox.height < 20) {
+            if (
+              newBox.width < 30 * stageScale ||
+              newBox.height < 30 * stageScale
+            ) {
               return oldBox;
             }
             return newBox;

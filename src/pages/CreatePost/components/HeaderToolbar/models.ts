@@ -10,4 +10,7 @@ export type HeaderToolbarPropsTypes = {
   setHistoryStep: (value: number) => void;
   stageRef: MutableRefObject<null>;
   width: number;
+  items: Array<ItemsTypes>;
+  isTyping: boolean;
+  handleHistory: (value: Array<ItemsTypes>) => void;
 };

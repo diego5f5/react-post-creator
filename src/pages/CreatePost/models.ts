@@ -1,4 +1,7 @@
-export type ObjectItemTypes = 'image' | 'text';
+export enum ItemTypesEnum {
+  IMAGE = 'IMAGE',
+  TEXT = 'text',
+}
 
 export type ItemIDTypes = string | undefined;
 
@@ -11,6 +14,6 @@ export type ItemsTypes = {
   rotation?: number;
   id: ItemIDTypes;
   fontSize?: number;
-  itemType: ObjectItemTypes;
+  itemType: ItemTypesEnum;
   text?: string;
 };
