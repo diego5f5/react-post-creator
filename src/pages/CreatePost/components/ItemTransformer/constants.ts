@@ -1,6 +1,13 @@
+import { ItemTypesEnum } from '../../models';
+
 const defaultAnchors = {
-  text: ["middle-left", "middle-right"],
-  image: ["top-left", "top-right", "bottom-left", "bottom-right"],
+  [ItemTypesEnum.TEXT]: ['middle-left', 'middle-right'],
+  [ItemTypesEnum.IMAGE]: [
+    'top-left',
+    'top-right',
+    'bottom-left',
+    'bottom-right',
+  ],
 };
 
 export { defaultAnchors };

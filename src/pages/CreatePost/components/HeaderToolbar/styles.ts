@@ -14,8 +14,10 @@ export const Container = styled.div<{ width: number }>`
   justify-content: space-between;
 `;
 
-export const UndoRedoContainer = styled.div`
+export const ButtonsContainer = styled.div`
   display: flex;
+  width: 96px;
+  justify-content: end;
 `;
 
 export const CustomIconButton = MaterialStyled(IconButton)(() => ({}));

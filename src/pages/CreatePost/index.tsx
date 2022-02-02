@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, RefObject } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Stage, Layer } from 'react-konva';
 import Konva from 'konva';
 
@@ -25,15 +25,14 @@ const CreatePost = () => {
   const stageRef = useRef(null);
 
   useEffect(() => {
-    handleWindowResize(bodyRef);
+    handleWindowResize();
 
-    window.addEventListener('resize', () => handleWindowResize(bodyRef));
+    window.addEventListener('resize', handleWindowResize);
 
-    return () =>
-      window.removeEventListener('resize', () => handleWindowResize(bodyRef));
+    return () => window.removeEventListener('resize', handleWindowResize);
   }, []);
 
-  const handleWindowResize = (bodyRef: RefObject<HTMLDivElement>) => {
+  const handleWindowResize = () => {
     if (bodyRef.current) {
       let width = bodyRef.current.offsetWidth;
       let height = bodyRef.current.offsetHeight;

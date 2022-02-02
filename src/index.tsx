@@ -1,13 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { PostProvider } from 'contexts/post';
+
 import GlobalStyles from './globalStyles';
 
 import CreatePost from './pages/CreatePost';
 
 ReactDOM.render(
   <React.StrictMode>
-    <CreatePost />
-    <GlobalStyles />
+    <PostProvider>
+      <CreatePost />
+      <GlobalStyles />
+    </PostProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

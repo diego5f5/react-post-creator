@@ -3,17 +3,19 @@ import {
   RedoOutlined,
   Download,
   TextFieldsOutlined,
-  AddPhotoAlternateOutlined,
+  AddPhotoAlternate,
   Delete,
 } from '@mui/icons-material';
 import useImage from 'use-image';
 
 import imgTestt from 'assets/img.png';
 
+import { STAGE_VIRTUAL_SIZE } from '../../constants';
+
 import { HeaderToolbarPropsTypes } from './models';
 import { ItemTypesEnum } from '../../models';
 
-import { Container, UndoRedoContainer, CustomIconButton } from './styles';
+import { Container, ButtonsContainer, CustomIconButton } from './styles';
 
 const HeaderToolbar = ({
   stageRef,
@@ -31,10 +33,11 @@ const HeaderToolbar = ({
   const [image] = useImage(imgTestt);
 
   const handleAddSticker = () => {
-    let newItemsArray = [...items];
+    const newItemsArray = [...items];
+
     newItemsArray.push({
-      x: 0,
-      y: 0,
+      x: STAGE_VIRTUAL_SIZE / 2 - 125,
+      y: STAGE_VIRTUAL_SIZE / 2 - 125,
       width: 250,
       height: 250,
       rotation: 0,
@@ -48,15 +51,19 @@ const HeaderToolbar = ({
   };
 
   const handleAddText = () => {
-    let newItemsArray = [...items];
+    const newItemsArray = [...items];
+    const defaultWidth = 220;
+    const defaultFontsize = 34;
+
     newItemsArray.push({
-      x: 50,
-      y: 50,
+      x: STAGE_VIRTUAL_SIZE / 2 - defaultWidth / 2,
+      y: STAGE_VIRTUAL_SIZE / 2 - defaultFontsize / 2,
       rotation: 0,
+      width: defaultWidth,
       text: 'Example Text',
       id: `text-${newItemsArray.length + 1}`,
       itemType: ItemTypesEnum.TEXT,
-      fontSize: 34,
+      fontSize: defaultFontsize,
     });
     setItems(newItemsArray);
 
@@ -135,7 +142,7 @@ const HeaderToolbar = ({
 
   return (
     <Container width={width}>
-      <UndoRedoContainer>
+      <ButtonsContainer>
         <CustomIconButton
           disabled={historyStep <= 0}
           onClick={handleUndo}
@@ -150,7 +157,7 @@ const HeaderToolbar = ({
         >
           <RedoOutlined />
         </CustomIconButton>
-      </UndoRedoContainer>
+      </ButtonsContainer>
 
       <CustomIconButton
         size="large"
@@ -161,16 +168,18 @@ const HeaderToolbar = ({
       </CustomIconButton>
 
       <CustomIconButton size="large" onClick={handleAddSticker}>
-        <AddPhotoAlternateOutlined />
+        <AddPhotoAlternate />
       </CustomIconButton>
 
       <CustomIconButton size="large" onClick={handleAddText}>
         <TextFieldsOutlined />
       </CustomIconButton>
 
-      <CustomIconButton size="large" onClick={handleExport}>
-        <Download />
-      </CustomIconButton>
+      <ButtonsContainer>
+        <CustomIconButton size="large" onClick={handleExport}>
+          <Download />
+        </CustomIconButton>
+      </ButtonsContainer>
     </Container>
   );
 };
