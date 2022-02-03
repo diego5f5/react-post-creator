@@ -2,27 +2,38 @@ import { useState, useRef, useEffect } from 'react';
 import { Stage, Layer } from 'react-konva';
 import Konva from 'konva';
 
-import HeaderToolbar from './components/HeaderToolbar';
 import Background from './components/Background';
+import UndoRedo from './components/UndoRedo';
+import RemoveItem from './components/RemoveItem';
+import AddImage from './components/AddImage';
+import AddText from './components/AddText';
+import PostDownload from './components/PostDownload';
 import ItemTransformer from './components/ItemTransformer';
 
 import { STAGE_VIRTUAL_SIZE, MIN_WIDTH } from './constants';
 
-import { ItemsTypes, ItemIDTypes } from './models';
+import { usePostProvider } from 'context/post';
 
-import { Container, BodySectionContainer } from './styles';
+import { ItemsTypes } from './models';
+
+import {
+  Container,
+  BodySectionContainer,
+  HeaderSectionContainer,
+} from './styles';
 
 const CreatePost = () => {
-  const [selectedId, setSelectedId] = useState<ItemIDTypes>();
-  const [isTyping, setIsTyping] = useState(false);
   const [stageScale, setStageScale] = useState(0);
-  const [items, setItems] = useState<Array<ItemsTypes>>([]);
-
-  const [history, setHistory] = useState<Array<Array<ItemsTypes>>>([[]]);
-  const [historyStep, setHistoryStep] = useState(0);
-
+  const {
+    items,
+    setItems,
+    selectedId,
+    setSelectedId,
+    setIsTyping,
+    handleHistory,
+    stageRef,
+  } = usePostProvider();
   const bodyRef = useRef<HTMLDivElement>(null);
-  const stageRef = useRef(null);
 
   useEffect(() => {
     handleWindowResize();
@@ -57,17 +68,6 @@ const CreatePost = () => {
     }
   };
 
-  const handleHistory = (itemsArray: Array<ItemsTypes>) => {
-    let auxHistory = [...history];
-    let auxHistoryStep = historyStep + 1;
-
-    auxHistory = auxHistory.slice(0, auxHistoryStep);
-    auxHistory.push(itemsArray);
-
-    setHistory(auxHistory);
-    setHistoryStep(auxHistoryStep);
-  };
-
   const handleChange = (
     newAttrs: ItemsTypes,
     index: number,
@@ -87,19 +87,13 @@ const CreatePost = () => {
   return (
     <Container>
       <BodySectionContainer ref={bodyRef}>
-        <HeaderToolbar
-          width={STAGE_VIRTUAL_SIZE * stageScale}
-          isTyping={isTyping}
-          stageRef={stageRef}
-          history={history}
-          historyStep={historyStep}
-          setHistoryStep={setHistoryStep}
-          items={items}
-          setItems={setItems}
-          selectedId={selectedId}
-          setSelectedId={setSelectedId}
-          handleHistory={handleHistory}
-        />
+        <HeaderSectionContainer width={STAGE_VIRTUAL_SIZE * stageScale}>
+          <UndoRedo />
+          <RemoveItem />
+          <AddImage />
+          <AddText />
+          <PostDownload />
+        </HeaderSectionContainer>
 
         <Stage
           width={STAGE_VIRTUAL_SIZE * stageScale}

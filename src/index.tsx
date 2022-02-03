@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { PostProvider } from 'contexts/post';
+import { PostProvider } from 'context/post';
 
 import GlobalStyles from './globalStyles';
 
