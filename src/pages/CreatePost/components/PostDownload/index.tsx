@@ -3,7 +3,7 @@ import { IconButton, Tooltip } from '@mui/material';
 
 import { usePostProvider } from 'context/post';
 
-import { ButtonsContainer } from '../../styles';
+import { ButtonsContainer, SimpleWrapper } from '../../styles';
 
 const PostDownload = () => {
   const { setSelectedId, stageRef } = usePostProvider();
@@ -30,10 +30,12 @@ const PostDownload = () => {
 
   return (
     <ButtonsContainer>
-      <Tooltip title="Download">
-        <IconButton size="large" onClick={handleExport}>
-          <Download />
-        </IconButton>
+      <Tooltip title="Download" arrow>
+        <SimpleWrapper>
+          <IconButton size="large" onClick={handleExport}>
+            <Download />
+          </IconButton>
+        </SimpleWrapper>
       </Tooltip>
     </ButtonsContainer>
   );

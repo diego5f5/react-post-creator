@@ -9,6 +9,8 @@ export const Container = styled.div`
   justify-content: center;
 `;
 
+export const SimpleWrapper = styled.span``;
+
 export const HeaderSectionContainer = styled.div<{ width: number }>`
   margin-top: ${`${TOP_MARGIN}px`};
   height: ${`${HEADER_TOOLBAR_HEIGHT}px`};

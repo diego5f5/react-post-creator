@@ -3,6 +3,8 @@ import { IconButton, Tooltip } from '@mui/material';
 
 import { usePostProvider } from 'context/post';
 
+import { SimpleWrapper } from '../../styles';
+
 const RemoveItem = () => {
   const {
     selectedId,
@@ -31,14 +33,16 @@ const RemoveItem = () => {
   };
 
   return (
-    <Tooltip title="Remove">
-      <IconButton
-        size="large"
-        onClick={handleRemoveItem}
-        disabled={isTyping || !selectedId ? true : false}
-      >
-        <Delete />
-      </IconButton>
+    <Tooltip title="Remove" arrow>
+      <SimpleWrapper>
+        <IconButton
+          size="large"
+          onClick={handleRemoveItem}
+          disabled={isTyping || !selectedId ? true : false}
+        >
+          <Delete />
+        </IconButton>
+      </SimpleWrapper>
     </Tooltip>
   );
 };

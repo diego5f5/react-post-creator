@@ -4,7 +4,7 @@ import { PostContextProps } from './models';
 
 import { ItemsTypes, ItemIDTypes } from '../pages/CreatePost/models';
 
-const PostContext = createContext({} as PostContextProps);
+const PostContext = createContext<PostContextProps | undefined>(undefined);
 
 const PostProvider: React.FC = ({ children }) => {
   const [selectedId, setSelectedId] = useState<ItemIDTypes>();

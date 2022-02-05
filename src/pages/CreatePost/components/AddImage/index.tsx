@@ -1,32 +1,38 @@
-import useImage from 'use-image';
+import { useState } from 'react';
 import { AddPhotoAlternate } from '@mui/icons-material';
 import { IconButton, Tooltip } from '@mui/material';
-import axios from 'axios';
-
-import imgTest from 'assets/img.png';
+import { usePostProvider } from 'context/post';
 
 import { STAGE_VIRTUAL_SIZE } from '../../constants';
 
-import { usePostProvider } from 'context/post';
+import ImagesDrawer from '../ImagesDrawer';
 
 import { ItemTypesEnum } from '../../models';
 
+import { SimpleWrapper } from '../../styles';
+
 const AddImage = () => {
-  const [image] = useImage(imgTest);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const { items, setItems, handleHistory } = usePostProvider();
 
-  const handleAddImage = () => {
+  const handleAddImage = (imageUrl: string) => {
     const newItemsArray = [...items];
 
+    const defaultImageSize = 250;
+
+    const imageElement = document.createElement('img');
+    imageElement.setAttribute('src', imageUrl);
+    imageElement.setAttribute('crossOrigin', 'anonymous');
+
     newItemsArray.push({
-      x: STAGE_VIRTUAL_SIZE / 2 - 125,
-      y: STAGE_VIRTUAL_SIZE / 2 - 125,
-      width: 250,
-      height: 250,
+      x: STAGE_VIRTUAL_SIZE / 2 - defaultImageSize / 2,
+      y: STAGE_VIRTUAL_SIZE / 2 - defaultImageSize / 2,
+      width: defaultImageSize,
+      height: defaultImageSize,
       rotation: 0,
       id: `sticker-${newItemsArray.length + 1}`,
-      image: image,
+      image: imageElement,
       itemType: ItemTypesEnum.IMAGE,
     });
     setItems(newItemsArray);
@@ -34,28 +40,22 @@ const AddImage = () => {
     handleHistory(newItemsArray);
   };
 
-  const handleGetImages = () => {
-    axios
-      .get('/test')
-      .then(function (response) {
-        // handle success
-        console.log(response);
-      })
-      .catch(function (error) {
-        // handle error
-        console.log(error);
-      })
-      .then(function () {
-        // always executed
-      });
-  };
-
   return (
-    <Tooltip title="Add Image">
-      <IconButton size="large" onClick={handleAddImage}>
-        <AddPhotoAlternate />
-      </IconButton>
-    </Tooltip>
+    <>
+      <ImagesDrawer
+        isDrawerOpen={isDrawerOpen}
+        setIsDrawerOpen={setIsDrawerOpen}
+        handleAddImage={(imageUrl) => handleAddImage(imageUrl)}
+      />
+
+      <Tooltip title="Add Image" arrow>
+        <SimpleWrapper>
+          <IconButton size="large" onClick={() => setIsDrawerOpen(true)}>
+            <AddPhotoAlternate />
+          </IconButton>
+        </SimpleWrapper>
+      </Tooltip>
+    </>
   );
 };
 

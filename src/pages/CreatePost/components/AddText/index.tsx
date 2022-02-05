@@ -7,6 +7,8 @@ import { usePostProvider } from 'context/post';
 
 import { ItemTypesEnum } from '../../models';
 
+import { SimpleWrapper } from '../../styles';
+
 const AddText = () => {
   const { items, setItems, handleHistory } = usePostProvider();
 
@@ -31,10 +33,12 @@ const AddText = () => {
   };
 
   return (
-    <Tooltip title="Add Text">
-      <IconButton size="large" onClick={handleAddText}>
-        <TextFieldsOutlined />
-      </IconButton>
+    <Tooltip title="Add Text" arrow>
+      <SimpleWrapper>
+        <IconButton size="large" onClick={handleAddText}>
+          <TextFieldsOutlined />
+        </IconButton>
+      </SimpleWrapper>
     </Tooltip>
   );
 };

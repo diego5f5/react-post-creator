@@ -3,7 +3,7 @@ import { IconButton, Tooltip } from '@mui/material';
 
 import { usePostProvider } from 'context/post';
 
-import { ButtonsContainer } from '../../styles';
+import { ButtonsContainer, SimpleWrapper } from '../../styles';
 
 const UndoRedo = () => {
   const {
@@ -50,24 +50,28 @@ const UndoRedo = () => {
 
   return (
     <ButtonsContainer>
-      <Tooltip title="Undo">
-        <IconButton
-          disabled={historyStep <= 0}
-          onClick={handleUndo}
-          size="large"
-        >
-          <UndoOutlined />
-        </IconButton>
+      <Tooltip title="Undo" arrow>
+        <SimpleWrapper>
+          <IconButton
+            disabled={historyStep <= 0}
+            onClick={handleUndo}
+            size="large"
+          >
+            <UndoOutlined />
+          </IconButton>
+        </SimpleWrapper>
       </Tooltip>
 
-      <Tooltip title="Redo">
-        <IconButton
-          disabled={historyStep + 1 === history.length}
-          onClick={handleRedo}
-          size="large"
-        >
-          <RedoOutlined />
-        </IconButton>
+      <Tooltip title="Redo" arrow>
+        <SimpleWrapper>
+          <IconButton
+            disabled={historyStep + 1 === history.length}
+            onClick={handleRedo}
+            size="large"
+          >
+            <RedoOutlined />
+          </IconButton>
+        </SimpleWrapper>
       </Tooltip>
     </ButtonsContainer>
   );
