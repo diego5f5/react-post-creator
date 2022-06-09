@@ -1,14 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable array-callback-return */
 import { useEffect, useState } from 'react';
-import { CircularProgress } from '@mui/material';
+import { CircularProgress, Drawer, IconButton } from '@mui/material';
+import { Add, Refresh, Close } from '@mui/icons-material';
 import axios from 'axios';
 
 import {
-  CustomDrawer,
   DrawerHeader,
   DrawerBody,
   ImageContainer,
+  ButtonsContainer,
+  CustomFab,
 } from './styles';
 
 type ImagesDrawerProps = {
@@ -23,69 +24,73 @@ const ImagesDrawer = ({
   handleAddImage,
 }: ImagesDrawerProps) => {
   const [loading, setLoading] = useState(false);
-  const [imageUrlArray, setImageUrlArray] = useState<string[]>([]);
-  const [currentOffset, setCurrentOffset] = useState(0);
+  const [imageUrl, setImageUrl] = useState('');
 
   useEffect(() => {
-    handleGetPokemonList();
+    handleGetPokemon();
   }, []);
 
-  const handleGetPokemonList = () => {
+  const handleGetRandomInt = (min: number, max: number) => {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min)) + min;
+  };
+
+  const handleGetPokemon = () => {
     setLoading(true);
 
-    axios
-      .get(
-        `https://pokeapi.co/api/v2/pokemon/?offset=${currentOffset}&limit=12`
-      )
-      .then((response) => {
-        if (response.data && response.data.results) {
-          const resultList = response.data.results;
-          const auxImageUrlArray: string[] = [];
+    const randomInt = handleGetRandomInt(1, 500);
 
-          Promise.all(
-            resultList.map((pokemon: { name: string; url: string }) => {
-              axios.get(pokemon.url).then((response) => {
-                if (response.data) {
-                  auxImageUrlArray.push(
-                    response.data.sprites?.other?.home?.front_default || ''
-                  );
-                }
-              });
-            })
-          )
-            .catch(() => setLoading(false))
-            .finally(() => {
-              setLoading(false);
-              setImageUrlArray(auxImageUrlArray);
-            });
-        }
+    axios
+      .get(`https://pokeapi.co/api/v2/pokemon/${randomInt}/`)
+      .then((response) => {
+        setImageUrl(response.data.sprites?.other?.home?.front_default || '');
       })
-      .catch(() => setLoading(false));
+      .finally(() => setLoading(false));
   };
 
   return (
-    <CustomDrawer
+    <Drawer
       open={isDrawerOpen}
       onClose={() => setIsDrawerOpen(false)}
       anchor={'right'}
     >
-      <DrawerHeader></DrawerHeader>
+      <DrawerHeader>
+        <IconButton
+          color="default"
+          size="large"
+          onClick={() => {
+            setIsDrawerOpen(false);
+          }}
+        >
+          <Close />
+        </IconButton>
+      </DrawerHeader>
       <DrawerBody>
-        {loading ? <CircularProgress /> : null}
+        <ImageContainer src={imageUrl} alt="Pokemon Image" />
 
-        {imageUrlArray.map((imgUrl, index) => (
-          <ImageContainer
-            key={`img-${index}`}
-            src={imgUrl}
-            alt="img"
-            onClick={() => {
-              setIsDrawerOpen(false);
-              handleAddImage(imgUrl);
-            }}
-          />
-        ))}
+        <ButtonsContainer>
+          {loading ? (
+            <CircularProgress />
+          ) : (
+            <>
+              <CustomFab color="primary" onClick={() => handleGetPokemon()}>
+                <Refresh />
+              </CustomFab>
+              <CustomFab
+                color="primary"
+                onClick={() => {
+                  setIsDrawerOpen(false);
+                  handleAddImage(imageUrl);
+                }}
+              >
+                <Add />
+              </CustomFab>
+            </>
+          )}
+        </ButtonsContainer>
       </DrawerBody>
-    </CustomDrawer>
+    </Drawer>
   );
 };
 
