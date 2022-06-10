@@ -1,10 +1,10 @@
 # React Post Creator
 
->An application that allows the creation of customized posts, where it is possible to add texts and images. It has a simple, friendly and responsive interface, using technologies such as Material UI and Styled Components.
+>An application that allows the creation of customized posts, where it's possible to add texts and images. It has a simple, friendly and responsive interface, using technologies such as Material UI and Styled Components.
 
 >The arts used in the functionality of adding images, comes from the RESTful api [PokéAPI](https://pokeapi.co/).
 
-![Feedback Widget Gif](https://raw.githubusercontent.com/diego5f5/feedback-widget-web/main/readme-assets/feedback-web.gif)
+![React Post Creator](https://raw.githubusercontent.com/diego5f5/react-post-creator/main/readme-files/react-post-creator.png)
 
 ## Getting Started
 
